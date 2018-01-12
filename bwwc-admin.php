@@ -1,7 +1,7 @@
 <?php
 /*
 Bitcoin Cash Payments for WooCommerce
-https://github.com/mboyd1/bitcoin-cash-payments-for-woocommerce
+https://github.com/sanchaz/bitcoin-cash-payments-for-woocommerce
 */
 
 // Include everything
@@ -25,7 +25,7 @@ $g_BWWC__config_defaults = array(
 
    // ------- Hidden constants
 // 'supported_currencies_arr'             =>  array ('USD', 'AUD', 'CAD', 'CHF', 'CNY', 'DKK', 'EUR', 'GBP', 'HKD', 'JPY', 'NZD', 'PLN', 'RUB', 'SEK', 'SGD', 'THB'), // Not used right now.
-   'database_schema_version'              =>  1.4,
+   'database_schema_version'              =>  1.5,
    'assigned_address_expires_in_mins'     =>  4*60,   // 4 hours to pay for order and receive necessary number of confirmations.
    'funds_received_value_expires_in_mins' =>  '5',		// 'received_funds_checked_at' is fresh (considered to be a valid value) if it was last checked within 'funds_received_value_expires_in_mins' minutes.
    'starting_index_for_new_btc_addresses' =>  '2',    // Generate new addresses for the wallet starting from this index.
@@ -76,11 +76,6 @@ function BWWC__GetPluginNameVersionEdition($please_donate = true)
             BWWC_VERSION. '</span> [<span style="color:#EE0000;background-color:#FFFF77;">&nbsp;' .
             BWWC_EDITION . '&nbsp;</span> edition]' .
           '</h2>';
-
-
-    if ($please_donate) {
-        $return_data .= '<p style="border:1px solid #890e4e;padding:5px 10px;color:#004400;background-color:#FFF;"><u>Please donate Bitcoin Cash to</u>:&nbsp;&nbsp;<span style="color:#d21577;font-size:110%;font-weight:bold;">18vzABPyVbbia8TDCKDtXJYXcoAFAPk2cj</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>';
-    }
 
     return $return_data;
 }
@@ -245,7 +240,7 @@ function BWWC__update_individual_bwwc_setting(&$bwwc_current_setting, $bwwc_new_
     if (is_string($bwwc_new_setting)) {
         $bwwc_current_setting = BWWC__stripslashes($bwwc_new_setting);
     } elseif (is_array($bwwc_new_setting)) {  // Note: new setting may not exist yet in current setting: curr[t5] - not set yet, while new[t5] set.
-      // Need to do recursive
+        // Need to do recursive
         foreach ($bwwc_new_setting as $k=>$v) {
             if (!isset($bwwc_current_setting[$k])) {
                 $bwwc_current_setting[$k] = "";
@@ -367,6 +362,7 @@ function BWWC__create_database_tables($bwwc_settings)
     $query = "CREATE TABLE IF NOT EXISTS `$btc_addresses_table_name` (
     `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
     `btc_address` char(36) NOT NULL,
+    `bch_cashaddr` char(80),
     `origin_id` char(128) NOT NULL DEFAULT '',
     `index_in_wallet` bigint(20) NOT NULL DEFAULT '0',
     `status` char(16)  NOT NULL DEFAULT 'unknown',
@@ -377,6 +373,7 @@ function BWWC__create_database_tables($bwwc_settings)
     `address_meta` MEDIUMBLOB NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `btc_address` (`btc_address`),
+    UNIQUE KEY `bch_cashaddr` (`bch_cashaddr`),
     KEY `index_in_wallet` (`index_in_wallet`),
     KEY `origin_id` (`origin_id`),
     KEY `status` (`status`)
@@ -429,6 +426,15 @@ function BWWC__create_database_tables($bwwc_settings)
             $query = "ALTER TABLE `$btc_addresses_table_name` MODIFY `address_meta` MEDIUMBLOB";
             $wpdb->query($query);
             $bwwc_settings['database_schema_version'] = 1.4;
+            $must_update_settings = true;
+        }
+
+        if ($version < 1.5) {
+            $query = "ALTER TABLE `$btc_addresses_table_name` ADD COLUMN `bch_cashaddr` char(80) AFTER `btc_address`";
+            $wpdb->query($query);
+            $query = "ALTER TABLE `$btc_addresses_table_name` ADD UNIQUE `bch_cashaddr` (`bch_cashaddr`)";
+            $wpdb->query($query);
+            $bwwc_settings['database_schema_version'] = 1.5;
             $must_update_settings = true;
         }
     }
