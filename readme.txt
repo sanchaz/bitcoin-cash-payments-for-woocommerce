@@ -1,6 +1,6 @@
 === (BETA) Bitcoin Cash Payments for WooCommerce ===
-Contributors: mboyd1, gesman, bitcoinway.com
-Donation address (bitcoin cash only): 18vzABPyVbbia8TDCKDtXJYXcoAFAPk2cj
+Contributors: sanchaz, mboyd1, gesman, bitcoinway.com
+Donation address: https://cryptartica.com (Buy yourself some Bitcoin Cash Merchandise :) )
 Tags: bitcoin cash, bitcoin cash wordpress plugin, bitcoin cash plugin, bitcoin cash payments, accept bitcoin cash, bch, bcc
 Requires at least: Wordpress 3.0.1
 Tested up to: Wordpress 4.8.1
@@ -66,6 +66,11 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 
 == Changelog ==
+
+= 4.13 =
+* Added simple casdddr support. This means displays cashaddr on pay page, also adds it to the post metadata for easier search. (Does not use it to query apis, will be added later)
+* Fixed styling issues using php cs fixer v2 using PSR2 rules
+* Remove donation address and plea
 
 = 4.12 =
 * Fixed multiple currency.
