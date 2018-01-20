@@ -234,7 +234,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
   </tr>
   <tr class="bpit-table-row">
     <td style="vertical-align:middle;" class="bpit-td-name bpit-td-name-btcaddr">
-      Address:
+      Legacy Address:
     </td>
     <td class="bpit-td-value bpit-td-value-btcaddr">
       <div style="border:1px solid #FCCA09;padding:2px 6px;margin:2px;background-color:#FCF8E3;border-radius:4px;color:#555;font-weight: bold;font-size: 120%;">
@@ -254,11 +254,11 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
   </tr>
   <tr class="bpit-table-row">
     <td style="vertical-align:middle;" class="bpit-td-name bpit-td-name-qr">
-	    QR Code:
+	    Cash Addr QR Code:
     </td>
     <td class="bpit-td-value bpit-td-value-qr">
       <div style="border:1px solid #FCCA09;padding:5px;margin:2px;background-color:#FCF8E3;border-radius:4px;">
-        <a href="bitcoincash:{{{BITCOINS_ADDRESS}}}?amount={{{BITCOINS_AMOUNT}}}"><img src="https://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data=bitcoincash%3A{{{BITCOINS_ADDRESS}}}%3Famount%3D{{{BITCOINS_AMOUNT}}}&amp;qzone=1&amp;margin=0&amp;size=180x180&amp;ecc=L" style="vertical-align:middle;border:1px solid #888;" /></a>
+        <a href="{{{BCH_CASHADDR}}}?amount={{{BITCOINS_AMOUNT}}}"><img src="https://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data={{{BCH_CASHADDR_URL_SAFE}}}%3Famount%3D{{{BITCOINS_AMOUNT}}}&amp;qzone=1&amp;margin=0&amp;size=180x180&amp;ecc=L" style="vertical-align:middle;border:1px solid #888;" /></a>
       </div>
     </td>
   </tr>
@@ -277,7 +277,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
 
             $payment_instructions_description = '
 						  <p class="description" style="width:50%;float:left;width:49%;">
-					    	' . __('Specific instructions given to the customer to complete Bitcoins payment.<br />You may change it, but make sure these tags will be present: <b>{{{BITCOINS_AMOUNT}}}</b>, <b>{{{BITCOINS_ADDRESS}}}</b>, <b>{{{BCH_CASHADDR}}}</b> and <b>{{{EXTRA_INSTRUCTIONS}}}</b> as these tags will be replaced with customer - specific payment details.', 'woocommerce') . '
+					    	' . __('Specific instructions given to the customer to complete Bitcoins payment.<br />You may change it, but make sure these tags will be present: <b>{{{BITCOINS_AMOUNT}}}</b>, <b>{{{BITCOINS_ADDRESS}}}</b>, <b>{{{BCH_CASHADDR}}}</b>, <b>{{{BCH_CASHADDR_URL_SAFE}}}</b> (this should be included in url calls to apis as it encodes the : properly for urls) and <b>{{{EXTRA_INSTRUCTIONS}}}</b> as these tags will be replaced with customer - specific payment details.', 'woocommerce') . '
 						  </p>
 						  <p class="description" style="width:50%;float:left;width:49%;">
 					    	Payment Instructions, original template (for reference):<br />
@@ -638,6 +638,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
             $instructions = str_replace('{{{BITCOINS_AMOUNT}}}', $order_total_in_btc, $instructions);
             $instructions = str_replace('{{{BITCOINS_ADDRESS}}}', $bitcoins_address, $instructions);
             $instructions = str_replace('{{{BCH_CASHADDR}}}', $bch_cashaddr, $instructions);
+            $instructions = str_replace('{{{BCH_CASHADDR_URL_SAFE}}}', urlencode($bch_cashaddr), $instructions);
             $instructions =
                 str_replace(
                     '{{{EXTRA_INSTRUCTIONS}}}',
@@ -645,7 +646,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
                     $this->instructions_multi_payment_str,
                     $instructions
                     );
-            $order->add_order_note(__("Order instructions: price=&#3647;{$order_total_in_btc}, incoming account:{$bitcoins_address}, (cashddr: {$bch_cashaddr}", 'woocommerce'));
+            $order->add_order_note(__("Order instructions: price=&#3647;{$order_total_in_btc}, incoming account:{$bitcoins_address}, cashddr: {$bch_cashaddr}", 'woocommerce'));
 
             echo wpautop(wptexturize($instructions));
         }
@@ -682,6 +683,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
             $instructions = str_replace('{{{BITCOINS_AMOUNT}}}', $order_total_in_btc, $instructions);
             $instructions = str_replace('{{{BITCOINS_ADDRESS}}}', $bitcoins_address, $instructions);
             $instructions = str_replace('{{{BCH_CASHADDR}}}', $bch_cashaddr, $instructions);
+            $instructions = str_replace('{{{BCH_CASHADDR_URL_SAFE}}}', urlencode($bch_cashaddr), $instructions);
             $instructions =
                 str_replace(
                     '{{{EXTRA_INSTRUCTIONS}}}',

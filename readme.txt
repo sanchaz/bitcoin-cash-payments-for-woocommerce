@@ -67,6 +67,9 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 == Changelog ==
 
+= 4.14 =
+* Changed qr code to cashaddr. Only one qr is displayed to avoid clutter and encourage use of cashaddr.
+
 = 4.13 =
 * Added simple casdddr support. This means displays cashaddr on pay page, also adds it to the post metadata for easier search. (Does not use it to query apis, will be added later)
 * Fixed styling issues using php cs fixer v2 using PSR2 rules
