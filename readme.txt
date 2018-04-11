@@ -67,6 +67,9 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 == Changelog ==
 
+= 4.15 =
+* Added exchange rate to order metadata
+
 = 4.14 =
 * Changed qr code to cashaddr. Only one qr is displayed to avoid clutter and encourage use of cashaddr.
 
