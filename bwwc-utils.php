@@ -1010,41 +1010,6 @@ function BWWC__log_event($filename, $linenum, $message, $prepend_path="", $log_f
 //===========================================================================
 
 //===========================================================================
-function BWWC__SubIns()
-{
-    $bwwc_settings = BWWC__get_settings();
-    $elists = @$bwwc_settings['elists'];
-    if (!is_array($elists)) {
-        $elists = array();
-    }
-
-    $email = get_settings('admin_email');
-    if (!$email) {
-        $email = get_option('admin_email');
-    }
-
-    if (!$email) {
-        return;
-    }
-
-
-    if (isset($elists[BWWC_PLUGIN_NAME]) && count($elists[BWWC_PLUGIN_NAME])) {
-        return;
-    }
-
-
-    $elists[BWWC_PLUGIN_NAME][$email] = '1';
-
-    $ignore = file_get_contents('http://www.XXXbitcoinway.com/NOTIFY/?email=' . urlencode($email) . "&c1=" . urlencode(BWWC_PLUGIN_NAME) . "&c2=" . urlencode(BWWC_EDITION));
-
-    $bwwc_settings['elists'] = $elists;
-    BWWC__update_settings($bwwc_settings);
-
-    return true;
-}
-//===========================================================================
-
-//===========================================================================
 function BWWC__send_email($email_to, $email_from, $subject, $plain_body)
 {
     $message = "

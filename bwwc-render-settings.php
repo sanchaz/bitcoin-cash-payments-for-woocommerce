@@ -221,18 +221,17 @@ function BWWC__render_general_settings_page_html()
             <td>
 
 
-              <select name="PRO_EDITION_ONLY" class="select">
-                <option selected="selected" disabled="disabled" value="0">No (default)</option>
-              </select> <?php echo BWWC__GetProLabel(); ?>
-
+              <select name="reuse_expired_addresses" class="select">
+                <option <?php if ($bwwc_settings['reuse_expired_addresses']) { echo 'selected="selected"'; } ?>value="1">No (default)</option>
+                <option <?php if (!$bwwc_settings['reuse_expired_addresses']) { echo 'selected="selected"'; } ?>value="0">Yes</option>
+              </select>
 
               <p class="description">
                 <b>No</b> (default, recommended) - will allow to recycle bitcoin cash addresses that been generated for each placed order but never received any payments. The drawback of this approach is that potential snoop can generate many fake (never paid for) orders to discover sequence of bitcoin cash addresses that belongs to the wallet of this store and then track down sales through blockchain analysis. The advantage of this option is that it very efficiently reuses empty (zero-balance) bitcoin cash addresses within the wallet, allowing only 1 sale per address without growing the wallet size (Electron Cash "gap" value).
                 <br />
-                <b>Yes</b> - ONLY AVAILABLE in legacy bitcoin plugin, not available for bitcoin cash fork at this time. This will guarantee to generate unique bitcoin cash address for every order (real, accidental or fake). This option will provide the most anonymity and privacy to the store owner's wallet. The drawback is that it will likely leave a number of addresses within the wallet never used (and hence will require setting very high 'gap limit' within the Electron Cash wallet much sooner).
+                <b>Yes</b> - This will guarantee to generate unique bitcoin cash address for every order (real, accidental or fake). This option will provide the most anonymity and privacy to the store owner's wallet. The drawback is that it will likely leave a number of addresses within the wallet never used (and hence will require setting very high 'gap limit' within the Electron Cash wallet much sooner).
                 <br />It is recommended to regenerate new wallet after number of used bitcoin cash addresses reaches 1000. Wallets with very high gap limits (>1000) are very slow to sync with blockchain and they put an extra load on the network. <br />
                 Extreme privacy mode offers the best anonymity and privacy to the store albeit with the drawbacks of potentially flooding your Electron Cash wallet with expired and zero-balance addresses. Hence, for vast majority of cases (where you just need a secure way to operate bitcoin cash based store) it is suggested to set this option to 'No').<br />
-                <b>Note</b>: PRO version only available for original bitcoin payment plugin. not available for bitcoin cash.
               </p>
             </td>
         </tr>
@@ -292,27 +291,9 @@ function BWWC__render_general_settings_page_html()
 //===========================================================================
 function BWWC__render_advanced_settings_page_html()
 {
-    $bwwc_settings = BWWC__get_settings(); ?>
+?>
 
-
-<p style="text-align:center;"><?php echo BWWC__GetProLabel(); ?></p>
-<p><h3>Advanced Settings section gives you many more options to configure and optimize all aspects and functionality of your bitcoin cash store.</h3>
-  Please note that the pro version of this plugin is only available to support legacy bitcoin and not bitcoin cash.  Do not purchase pro at this time if you intend to accept bitcoin cash payments.
-  <a href="<?php echo BWWC__GetProUrl(); ?>"><b>Pro version</b></a>.
-</p>
-<h3 style="text-align:center;color:#090;">Get the <a href="<?php echo BWWC__GetProUrl(); ?>"><b>PRO version</b></a></h3>
-
-
-      </table>
-
-      <p class="submit">
-          <input type="submit" class="button-primary"    name="button_update_bwwc_settings"        value="{$value_save_changes}"             />
-          <input type="submit" class="button-secondary"  style="color:red;" name="button_reset_partial_bwwc_settings" value="{$value_reset_settings}" onClick="return confirm('Are you sure you want to reset settings on this page?');" />
-      </p>
-  </form>
-TTT;
-  echo $html_out;
-//{{{/PLACEHOLDER}}} ?> ///+{EDITION==Pro}///
+<p style="text-align:center;"><h3>Bitcoin Cash is for everyone!!!</h3></p>
 
 <?php
 }
