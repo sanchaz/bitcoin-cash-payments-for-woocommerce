@@ -5,7 +5,7 @@
 Plugin Name: Bitcoin Cash Payments for WooCommerce
 Plugin URI: https://github.com/sanchaz/bitcoin-cash-payments-for-woocommerce
 Description: Bitcoin Cash Payments for WooCommerce plugin allows you to accept payments in bitcoin cash for physical and digital products at your WooCommerce-powered online store.
-Version: 4.16
+Version: 4.16.1
 Author: sanchaz
 Author URI: https://github.com/sanchaz/bitcoin-cash-payments-for-woocommerce
 License: GNU General Public License 2.0 (GPL) http://www.gnu.org/licenses/gpl.html
@@ -54,7 +54,6 @@ function BWWC_activate()
 
     // Create necessary database tables if not already exists...
     BWWC__create_database_tables($bwwc_settings);
-    BWWC__SubIns();
 
     //----------------------------------
     // Setup cron jobs
