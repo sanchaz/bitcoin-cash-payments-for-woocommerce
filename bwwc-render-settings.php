@@ -130,7 +130,7 @@ function BWWC__render_general_settings_page_html()
               <option <?php if ($bwwc_settings['service_provider'] == 'electrum_wallet') {
         echo 'selected="selected"';
     } ?> value="electrum_wallet">Your own Electron Cash wallet</option>
-              <option <?php if ($bwwc_settings['service_provider'] == 'blockchain_info') {
+              <option disabled <?php if ($bwwc_settings['service_provider'] == 'blockchain_info') {
         echo 'selected="selected"';
     } ?> value="blockchain_info">Blockchain.info API (DOES NOT WORK FOR BITCOIN CASH! use Electron Cash instead)</option>
             </select>
@@ -277,6 +277,39 @@ function BWWC__render_general_settings_page_html()
                 "Hard" cron jobs may not be properly supported by all hosting plans (many shared hosting plans has restrictions in place).
               </p>
             </td>
+        </tr>
+
+        <tr valign="top">
+          <th scope="row">Checkout Icon:</th>
+          <td>
+            <fieldset>
+              <p>
+                <?php
+                $plugin_root = dirname(__FILE__);
+                $icon_dir = '/images/checkout-icons/';
+                $icons = scandir($plugin_root . $icon_dir);
+                foreach($icons as $icon) {
+                    if (!is_file($plugin_root . $icon_dir . $icon)) {
+                        continue;
+                    }
+                    $icon_rel_path = $icon_dir . $icon;
+                    $icon_url = plugins_url($icon_rel_path, __FILE__);
+                    $checked = "";
+                    if ($bwwc_settings['selected_checkout_icon'] == $icon_rel_path) {
+                        $checked = 'checked';
+                    }
+                    echo '<input type="radio" name="selected_checkout_icon" id="' . $icon. '" value="' . $icon_rel_path . '" ' . $checked . '/>';
+                    echo '<label for="' . $icon. '"><img src="' . $icon_url . '" height="32"></img></label><br />';
+                }
+                ?>
+              </p>
+              </fieldset>
+              <p class="description">
+                Icon displayed to users when choosing the payment method.<br />
+                You can upload new icons to: <?php echo str_replace(ABSPATH, "", $plugin_root . $icon_dir); ?><br />
+                Make sure to scale the image to a height of 32px.
+              </p>
+          </td>
         </tr>
 
       </table>

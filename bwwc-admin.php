@@ -60,7 +60,7 @@ $g_BWWC__config_defaults = array(
    'enable_soft_cron_job'                 =>  '1',    // Enable "soft" Wordpress-driven cron jobs.
 
    // New BCH settings
-   'checkout_icon_select'                 =>  '',
+   'selected_checkout_icon'               =>  '/images/checkout-icons/orange-1.png',
    ////////
 
    // ------- Copy of $this->settings of 'BWWC_Bitcoin' class.
