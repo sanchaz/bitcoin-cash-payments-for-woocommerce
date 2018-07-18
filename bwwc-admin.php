@@ -59,6 +59,10 @@ $g_BWWC__config_defaults = array(
    'autocomplete_paid_orders'							=>  '1',
    'enable_soft_cron_job'                 =>  '1',    // Enable "soft" Wordpress-driven cron jobs.
 
+   // New BCH settings
+   'checkout_icon_select'                 =>  '',
+   ////////
+
    // ------- Copy of $this->settings of 'BWWC_Bitcoin' class.
    // DEPRECATED (only blockchain.info related settings still remain there.)
    'gateway_settings'                     =>  array('confirmations' => 6),

@@ -67,6 +67,10 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 == Changelog ==
 
+= 4.17 =
+* Hardcron behaviour now also happens if soft_cron is set and DISABLE_WP_CRON = true, ie the user is running it manually or through real cron
+* The template now features the amount after the address and a message.
+
 = 4.16 =
 * Added reuse_expired_addresses option in the menus for everyone
 

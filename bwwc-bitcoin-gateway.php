@@ -227,7 +227,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
       ' . __('Amount', 'woocommerce') . ' (<strong>BCH</strong>):
     </td>
     <td class="bpit-td-value bpit-td-value-amount">
-      <div style="border:1px solid #FCCA09;padding:2px 6px;margin:2px;background-color:#FCF8E3;border-radius:4px;color:#CC0000;font-weight: bold;font-size: 120%;">
+      <div style="padding:2px 6px;margin:2px;color:#CC0000;font-weight: bold;font-size: 120%;">
       	{{{BITCOINS_AMOUNT}}}
       </div>
     </td>
@@ -237,8 +237,8 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
       Legacy Address:
     </td>
     <td class="bpit-td-value bpit-td-value-btcaddr">
-      <div style="border:1px solid #FCCA09;padding:2px 6px;margin:2px;background-color:#FCF8E3;border-radius:4px;color:#555;font-weight: bold;font-size: 120%;">
-        {{{BITCOINS_ADDRESS}}}
+      <div style="padding:2px 6px;font-weight: bold;font-size: 120%;">
+        {{{BITCOINS_ADDRESS}}}?amount={{{BITCOINS_AMOUNT}}}&message={{{PAYMENT_MESSAGE}}}
       </div>
     </td>
   </tr>
@@ -247,8 +247,8 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
       Cash Addr:
     </td>
     <td class="bpit-td-value bpit-td-value-btcaddr">
-      <div style="border:1px solid #FCCA09;padding:2px 6px;margin:2px;background-color:#FCF8E3;border-radius:4px;color:#555;font-weight: bold;font-size: 120%;">
-        {{{BCH_CASHADDR}}}
+      <div style="padding:2px 6px;font-weight: bold;font-size: 120%;">
+        {{{BCH_CASHADDR}}}?amount={{{BITCOINS_AMOUNT}}}&message={{{PAYMENT_MESSAGE}}}
       </div>
     </td>
   </tr>
@@ -257,8 +257,8 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
 	    Cash Addr QR Code:
     </td>
     <td class="bpit-td-value bpit-td-value-qr">
-      <div style="border:1px solid #FCCA09;padding:5px;margin:2px;background-color:#FCF8E3;border-radius:4px;">
-        <a href="{{{BCH_CASHADDR}}}?amount={{{BITCOINS_AMOUNT}}}"><img src="https://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data={{{BCH_CASHADDR_URL_SAFE}}}%3Famount%3D{{{BITCOINS_AMOUNT}}}&amp;qzone=1&amp;margin=0&amp;size=180x180&amp;ecc=L" style="vertical-align:middle;border:1px solid #888;" /></a>
+      <div style="padding:2px 0px;">
+        <a href="{{{BCH_CASHADDR}}}?amount={{{BITCOINS_AMOUNT}}}&message={{{PAYMENT_MESSAGE}}}"><img src="https://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data={{{BCH_CASHADDR_URL_SAFE}}}%3Famount%3D{{{BITCOINS_AMOUNT}}}&amp;amp;message={{{PAYMENT_MESSAGE_URL_SAFE}}}&amp;qzone=1&amp;margin=0&amp;size=180x180&amp;ecc=L" style="vertical-align:middle;border:1px solid #888;" /></a>
       </div>
     </td>
   </tr>
@@ -633,25 +633,7 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
             // http://wcdocs.woothemes.com/apidocs/class-WC_Order.html
             $order = new WC_Order($order_id);
 
-            // Assemble detailed instructions.
-            $order_total_in_btc   = get_post_meta($order->id, 'order_total_in_btc', true); // set single to true to receive properly unserialized array
-            $bitcoins_address = get_post_meta($order->id, 'bitcoins_address', true); // set single to true to receive properly unserialized array
-            $bch_cashaddr = get_post_meta($order->id, 'bch_cashaddr', true); // set single to true to receive properly unserialized array
-
-
-            $instructions = $this->instructions;
-            $instructions = str_replace('{{{BITCOINS_AMOUNT}}}', $order_total_in_btc, $instructions);
-            $instructions = str_replace('{{{BITCOINS_ADDRESS}}}', $bitcoins_address, $instructions);
-            $instructions = str_replace('{{{BCH_CASHADDR}}}', $bch_cashaddr, $instructions);
-            $instructions = str_replace('{{{BCH_CASHADDR_URL_SAFE}}}', urlencode($bch_cashaddr), $instructions);
-            $instructions =
-                str_replace(
-                    '{{{EXTRA_INSTRUCTIONS}}}',
-
-                    $this->instructions_multi_payment_str,
-                    $instructions
-                    );
-            $order->add_order_note(__("Order instructions: price=&#3647;{$order_total_in_btc}, incoming account:{$bitcoins_address}, cashddr: {$bch_cashaddr}", 'woocommerce'));
+            $instructions = $this->BWWC_fill_in_instructions($order, true);
 
             echo wpautop(wptexturize($instructions));
         }
@@ -678,17 +660,29 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
                 return;
             }
 
-            // Assemble payment instructions for email
+            $instructions = $this->BWWC_fill_in_instructions($order);
+
+            echo wpautop(wptexturize($instructions));
+        }
+        //-------------------------------------------------------------------
+
+        public function BWWC_fill_in_instructions($order, $add_order_note = false) {
+            // Assemble detailed instructions.
             $order_total_in_btc   = get_post_meta($order->id, 'order_total_in_btc', true); // set single to true to receive properly unserialized array
             $bitcoins_address = get_post_meta($order->id, 'bitcoins_address', true); // set single to true to receive properly unserialized array
             $bch_cashaddr = get_post_meta($order->id, 'bch_cashaddr', true); // set single to true to receive properly unserialized array
 
+            $payment_message = urlencode(get_bloginfo('name') . " Order number:" . $order->get_order_number());
 
             $instructions = $this->instructions;
             $instructions = str_replace('{{{BITCOINS_AMOUNT}}}', $order_total_in_btc, $instructions);
             $instructions = str_replace('{{{BITCOINS_ADDRESS}}}', $bitcoins_address, $instructions);
             $instructions = str_replace('{{{BCH_CASHADDR}}}', $bch_cashaddr, $instructions);
             $instructions = str_replace('{{{BCH_CASHADDR_URL_SAFE}}}', urlencode($bch_cashaddr), $instructions);
+            $instructions = str_replace('{{{PAYMENT_MESSAGE}}}', $payment_message, $instructions);
+            // we need to double urlencode because it needs to be urlencoded for the generated qr code and the get request
+            // for the qr code also needs it urlencoded
+            $instructions = str_replace('{{{PAYMENT_MESSAGE_URL_SAFE}}}', urlencode($payment_message), $instructions);
             $instructions =
                 str_replace(
                     '{{{EXTRA_INSTRUCTIONS}}}',
@@ -696,10 +690,12 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
                     $this->instructions_multi_payment_str,
                     $instructions
                     );
+            if ($add_order_note) {
+                $order->add_order_note(__("Order instructions: price=&#3647;{$order_total_in_btc}, incoming account:{$bitcoins_address}, cashddr: {$bch_cashaddr}", 'woocommerce'));
+            }
 
-            echo wpautop(wptexturize($instructions));
+            return $instructions;
         }
-        //-------------------------------------------------------------------
 
         //-------------------------------------------------------------------
         /**

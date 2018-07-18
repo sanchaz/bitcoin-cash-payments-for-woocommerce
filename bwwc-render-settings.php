@@ -266,6 +266,8 @@ function BWWC__render_general_settings_page_html()
     } ?>
                 Cron job will take care of all regular bitcoin cash payment processing tasks, like checking if payments are made and automatically completing the orders.<br />
                 <b>Soft Cron</b>: - Wordpress-driven (runs on behalf of a random site visitor).
+                <br />If DISABLE_WP_CRON is true then this behaves like Hard Cron. However there is no need to run the script manually.
+                <br />DISABLE_WP_CRON is: <?php echo (defined('DISABLE_WP_CRON') && constant('DISABLE_WP_CRON') ? 'true' : 'false'); ?>
                 <br />
                 <b>Hard Cron</b>: - Cron job driven by the website hosting system/server (usually via CPanel). <br />
                 When enabling Hard Cron job - make this script to run every 5 minutes at your hosting panel cron job scheduler:<br />
