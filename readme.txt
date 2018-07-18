@@ -3,7 +3,7 @@ Contributors: sanchaz, mboyd1, gesman, bitcoinway.com
 Donation address: https://cryptartica.com (Buy yourself some Bitcoin Cash Merchandise :) )
 Tags: bitcoin cash, bitcoin cash wordpress plugin, bitcoin cash plugin, bitcoin cash payments, accept bitcoin cash, bch, bcc
 Requires at least: Wordpress 3.0.1
-Tested up to: Wordpress 4.8.1
+Tested up to: Wordpress 4.9.7
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -66,6 +66,12 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 
 == Changelog ==
+
+= 4.16 =
+* Added reuse_expired_addresses option in the menus for everyone
+
+= 4.15 =
+* Added exchange rate to order metadata
 
 = 4.14 =
 * Changed qr code to cashaddr. Only one qr is displayed to avoid clutter and encourage use of cashaddr.

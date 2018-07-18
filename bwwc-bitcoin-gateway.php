@@ -553,6 +553,11 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
              'bitcoins_refunded',	// meta key
              "0" 	// meta value. If array - will be auto-serialized
              );
+             update_post_meta(
+              $order_id, 			// post id ($order_id)
+              'bch_exchange_rate',	// meta key
+              $exchange_rate 	// meta value. If array - will be auto-serialized
+              );
             update_post_meta(
              $order_id, 				// post id ($order_id)
              '_incoming_payments',	// meta key. Starts with '_' - hidden from UI.
