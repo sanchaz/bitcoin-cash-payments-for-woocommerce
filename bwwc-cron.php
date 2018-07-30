@@ -16,11 +16,17 @@ if (@$_REQUEST['hardcron']=='1') {
 
 //===========================================================================
 // '$hardcron' == true if job is ran by Cpanel's cron job.
+// '$hardcron' is also affected by DISABLE_WP_CRON constant. If it is false
+// then the user has setup wp_cron via a real cron job and we can run as if
+// it is a $hardcron
 
 function BWWC_cron_job_worker($hardcron=false)
 {
     global $wpdb;
 
+    if (defined('DISABLE_WP_CRON') && constant('DISABLE_WP_CRON')) {
+        $hardcron = true;
+    }
 
     $bwwc_settings = BWWC__get_settings();
 
