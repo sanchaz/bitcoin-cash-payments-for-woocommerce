@@ -67,6 +67,9 @@ This is still in Beta, some bugs may be encountered please open an issue.
 
 == Changelog ==
 
+= 4.18 =
+* Made the gateway payment icon selectable. (Adding new ones is possible by uploading it to /images/checkout-icons, make sure to scale the image to a height of 32px). Changed the defaut icon to a new orange icon.
+
 = 4.17 =
 * Hardcron behaviour now also happens if soft_cron is set and DISABLE_WP_CRON = true, ie the user is running it manually or through real cron
 * The template now features the amount after the address and a message.

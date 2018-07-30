@@ -64,6 +64,9 @@ function BWWC__plugins_loaded__load_bitcoin_gateway()
             $this->instructions = $this->settings['instructions'];	// Detailed payment instructions for the buyer.
             $this->instructions_multi_payment_str  = __('You may send payments from multiple accounts to reach the total required.', 'woocommerce');
             $this->instructions_single_payment_str = __('You must pay in a single payment in full.', 'woocommerce');
+            if (isset($bwwc_settings['selected_checkout_icon']) && $bwwc_settings['selected_checkout_icon'] != "") {
+                $this->icon = plugins_url($bwwc_settings['selected_checkout_icon'], __FILE__);
+            }
 
 
             // Actions
